@@ -8,7 +8,7 @@ import com.alexander.cv_project.auth.infrastructure.adapter.out.persistence.enti
 import com.alexander.cv_project.auth.infrastructure.adapter.out.persistence.entity.RolePermissionId;
 
 public interface SpringDataRolePermissionRepo extends JpaRepository<RolePermissionEntity, RolePermissionId> {
-    List<RolePermissionEntity> findByIdRoleId(Long roleId);
+    List<RolePermissionEntity> findById_RoleId(Long roleId);
 
     List<RolePermissionEntity> findByIdPermissionId(Long permissionId);
 }

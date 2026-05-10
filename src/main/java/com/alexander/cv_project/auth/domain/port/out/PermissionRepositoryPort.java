@@ -12,4 +12,5 @@ public interface PermissionRepositoryPort {
     boolean existsById(Long id);
 
     List<Permission> findAll();
+    
 }

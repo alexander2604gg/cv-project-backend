@@ -45,9 +45,9 @@ public class JpaRolePermissionAdapter implements RolePermissionRepositoryPort {
     }
 
     @Override
-    public List<RolePermission> findByRoleId(Long roleId) {
+    public List<RolePermission> findAllByRoleId(Long roleId) {
         try {
-            return RolePermissionPersistenceMapper.toDomainList(repository.findByIdRoleId(roleId));
+            return RolePermissionPersistenceMapper.toDomainList(repository.findById_RoleId(roleId));
         } catch (DataAccessException ex) {
             throw new PersistenceException("Persistence error while listing role permissions by role");
         }

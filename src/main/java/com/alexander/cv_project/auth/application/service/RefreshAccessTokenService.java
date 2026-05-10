@@ -42,7 +42,7 @@ public class RefreshAccessTokenService implements RefreshAccessTokenUseCase {
                 .collect(Collectors.toSet());
 
         Set<Long> permissionIds = user.getRoles().stream()
-                .flatMap(role -> rolePermissionRepository.findByRoleId(role.getId()).stream())
+                .flatMap(role -> rolePermissionRepository.findAllByRoleId(role.getId()).stream())
                 .map(RolePermission::getPermissionId)
                 .collect(Collectors.toSet());
 

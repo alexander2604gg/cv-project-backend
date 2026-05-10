@@ -9,7 +9,7 @@ public interface RolePermissionRepositoryPort {
 
     void delete(RolePermission rolePermission);
 
-    List<RolePermission> findByRoleId(Long roleId);
+    List<RolePermission> findAllByRoleId(Long roleId);
 
     List<RolePermission> findByPermissionId(Long permissionId);
 }

@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.alexander.cv_project.auth.application.service.AuthenticateUserService;
+import com.alexander.cv_project.auth.application.port.in.ListPermissionsByRoleUseCase;
 import com.alexander.cv_project.auth.application.service.AssignRolePermissionsService;
 import com.alexander.cv_project.auth.application.service.CreatePermissionService;
 import com.alexander.cv_project.auth.application.service.CreateRoleService;
 import com.alexander.cv_project.auth.application.service.GetAuthenticatedUserProfileService;
+import com.alexander.cv_project.auth.application.service.ListPermissionsByRoleService;
 import com.alexander.cv_project.auth.application.service.ListPermissionsService;
 import com.alexander.cv_project.auth.application.service.ListRolesService;
 import com.alexander.cv_project.auth.application.service.RefreshAccessTokenService;
@@ -128,4 +130,11 @@ public class BeanConfiguration {
                 rolePermissionRepositoryPort,
                 permissionRepositoryPort);
     }
+
+    @Bean
+    public ListPermissionsByRoleService listPermissionsByRoleUseCase(
+            RolePermissionRepositoryPort rolePermissionRepositoryPort) {
+        return new ListPermissionsByRoleService(rolePermissionRepositoryPort);
+    }
+
 }
