@@ -7,9 +7,16 @@ import com.alexander.cv_project.auth.domain.model.RolePermission;
 public interface RolePermissionRepositoryPort {
     RolePermission save(RolePermission rolePermission);
 
+    List<RolePermission> saveAll (List<RolePermission> rolePermissions);
+
     void delete(RolePermission rolePermission);
 
     List<RolePermission> findAllByRoleId(Long roleId);
 
     List<RolePermission> findByPermissionId(Long permissionId);
+
+    List<RolePermission> findAllByPermissionIdIn(List<Long> permissionIds);
+
+    void deleteAllInBatch (Iterable<RolePermission> rolePermissions);
+
 }

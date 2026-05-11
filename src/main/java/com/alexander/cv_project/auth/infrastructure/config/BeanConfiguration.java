@@ -1,20 +1,11 @@
 package com.alexander.cv_project.auth.infrastructure.config;
 
+import com.alexander.cv_project.auth.application.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.alexander.cv_project.auth.application.service.AuthenticateUserService;
 import com.alexander.cv_project.auth.application.port.in.ListPermissionsByRoleUseCase;
-import com.alexander.cv_project.auth.application.service.AssignRolePermissionsService;
-import com.alexander.cv_project.auth.application.service.CreatePermissionService;
-import com.alexander.cv_project.auth.application.service.CreateRoleService;
-import com.alexander.cv_project.auth.application.service.GetAuthenticatedUserProfileService;
-import com.alexander.cv_project.auth.application.service.ListPermissionsByRoleService;
-import com.alexander.cv_project.auth.application.service.ListPermissionsService;
-import com.alexander.cv_project.auth.application.service.ListRolesService;
-import com.alexander.cv_project.auth.application.service.RefreshAccessTokenService;
-import com.alexander.cv_project.auth.application.service.RegisterUserService;
 import com.alexander.cv_project.auth.domain.port.out.PasswordEncoderPort;
 import com.alexander.cv_project.auth.domain.port.out.PermissionRepositoryPort;
 import com.alexander.cv_project.auth.domain.port.out.RefreshTokenServicePort;
@@ -30,6 +21,11 @@ import com.alexander.cv_project.auth.infrastructure.adapter.out.security.SpringS
 
 @Configuration
 public class BeanConfiguration {
+
+    @Bean
+    public DeletePermissionService deletePermissionService (PermissionRepositoryPort permissionRepositoryPort){
+        return new DeletePermissionService(permissionRepositoryPort);
+    }
 
     @Bean
     public CreatePermissionService createPermissionService(PermissionRepositoryPort permissionRepositoryPort) {

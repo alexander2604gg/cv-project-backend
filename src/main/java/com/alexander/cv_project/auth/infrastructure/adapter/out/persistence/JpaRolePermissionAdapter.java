@@ -36,6 +36,11 @@ public class JpaRolePermissionAdapter implements RolePermissionRepositoryPort {
     }
 
     @Override
+    public List<RolePermission> saveAll(List<RolePermission> rolePermissions) {
+        return List.of();
+    }
+
+    @Override
     public void delete(RolePermission rolePermission) {
         try {
             repository.deleteById(new RolePermissionId(rolePermission.getRoleId(), rolePermission.getPermissionId()));
@@ -60,5 +65,15 @@ public class JpaRolePermissionAdapter implements RolePermissionRepositoryPort {
         } catch (DataAccessException ex) {
             throw new PersistenceException("Persistence error while listing role permissions by permission");
         }
+    }
+
+    @Override
+    public List<RolePermission> findAllByPermissionIdIn(List<Long> permissionIds) {
+        return List.of();
+    }
+
+    @Override
+    public void deleteAllInBatch(Iterable<RolePermission> rolePermissions) {
+
     }
 }

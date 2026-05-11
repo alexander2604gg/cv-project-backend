@@ -1,6 +1,7 @@
 package com.alexander.cv_project.auth.infrastructure.adapter.out.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,13 +36,11 @@ public class JpaPermissionAdapter implements PermissionRepositoryPort {
     }
 
     @Override
-    public void deleteById(Long id) {
-        try {
-            repository.deleteById(id);
-        } catch (DataAccessException ex) {
-            throw new PersistenceException("Persistence error while deleting permission");
-        }
+    public void delete(Permission permission) {
+        PermissionEntity permissionEntity =  PermissionPersistenceMapper.toEntity(permission);
+        repository.delete(permissionEntity);
     }
+
 
     @Override
     public boolean existsById(Long id) {
@@ -59,5 +58,10 @@ public class JpaPermissionAdapter implements PermissionRepositoryPort {
         } catch (DataAccessException ex) {
             throw new PersistenceException("Persistence error while listing permissions");
         }
+    }
+
+    @Override
+    public Optional<Permission> findById(Long id) {
+        return repository.findById(id).map(PermissionPersistenceMapper::toDomain);
     }
 }
