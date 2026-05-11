@@ -1,5 +1,6 @@
 package com.alexander.cv_project.auth.infrastructure.config;
 
+import com.alexander.cv_project.auth.application.port.in.DeleteRoleUseCase;
 import com.alexander.cv_project.auth.application.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +24,13 @@ import com.alexander.cv_project.auth.infrastructure.adapter.out.security.SpringS
 public class BeanConfiguration {
 
     @Bean
-    public DeletePermissionService deletePermissionService (PermissionRepositoryPort permissionRepositoryPort){
-        return new DeletePermissionService(permissionRepositoryPort);
+    public DeleteRolService deleteRoleUseCase (RoleRepositoryPort roleRepositoryPort, RolePermissionRepositoryPort rolePermissionRepositoryPort){
+        return new DeleteRolService(roleRepositoryPort,rolePermissionRepositoryPort);
+    }
+
+    @Bean
+    public DeletePermissionService deletePermissionService (PermissionRepositoryPort permissionRepositoryPort, RolePermissionRepositoryPort rolePermissionRepositoryPort){
+        return new DeletePermissionService(permissionRepositoryPort,rolePermissionRepositoryPort);
     }
 
     @Bean

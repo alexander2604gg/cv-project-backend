@@ -1,6 +1,7 @@
 package com.alexander.cv_project.auth.infrastructure.adapter.out.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -44,6 +45,15 @@ public class JpaRoleAdapter implements RoleRepositoryPort {
     }
 
     @Override
+    public void delete(Role role) {
+        try {
+            repository.delete(RolePersistenceMapper.toEntity(role));
+        } catch (DataAccessException ex) {
+            throw new PersistenceException("Persistence error while deleting role");
+        }
+    }
+
+    @Override
     public boolean existsById(Long id) {
         try {
             return repository.existsById(id);
@@ -59,5 +69,10 @@ public class JpaRoleAdapter implements RoleRepositoryPort {
         } catch (DataAccessException ex) {
             throw new PersistenceException("Persistence error while listing roles");
         }
+    }
+
+    @Override
+    public Optional<Role> findById(Long id) {
+        return Optional.empty();
     }
 }

@@ -37,7 +37,7 @@ public class PermissionController {
 
     @DeleteMapping("/{permissionId}")
     public ResponseEntity<Void> delete(@PathVariable Long permissionId) {
-        deletePermissionUseCase.deletePermission(permissionId);
+        deletePermissionUseCase.execute(permissionId);
         return ResponseEntity.noContent().build();
     }
 }

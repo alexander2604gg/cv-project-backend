@@ -2,12 +2,10 @@ package com.alexander.cv_project.auth.infrastructure.adapter.in.web.controller;
 
 import java.util.List;
 
+import com.alexander.cv_project.auth.application.port.in.DeleteRoleUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alexander.cv_project.auth.application.port.in.CreateRoleUseCase;
 import com.alexander.cv_project.auth.application.port.in.ListRolesUseCase;
@@ -18,15 +16,13 @@ import com.alexander.cv_project.auth.infrastructure.adapter.in.web.mapper.RoleWe
 
 @RestController
 @RequestMapping("/api/roles")
+@RequiredArgsConstructor
 public class RoleController {
 
     private final CreateRoleUseCase useCase;
     private final ListRolesUseCase listRolesUseCase;
+    private final DeleteRoleUseCase deleteRoleUseCase;
 
-    public RoleController(CreateRoleUseCase useCase, ListRolesUseCase listRolesUseCase) {
-        this.useCase = useCase;
-        this.listRolesUseCase = listRolesUseCase;
-    }
 
     @PostMapping
     public ResponseEntity<RoleResponse> create(@RequestBody RoleRequest roleRequest) {
@@ -39,5 +35,11 @@ public class RoleController {
     public ResponseEntity<List<RoleResponse>> list() {
         List<RoleResponse> roles = RoleWebMapper.toResponseList(listRolesUseCase.execute());
         return ResponseEntity.ok(roles);
+    }
+
+    @DeleteMapping("/{roleId}")
+    public ResponseEntity<Void> delete(@PathVariable Long permissionId) {
+        deleteRoleUseCase.execute(permissionId);
+        return ResponseEntity.noContent().build();
     }
 }
