@@ -17,6 +17,7 @@ import com.alexander.cv_project.auth.repository.RoleRepository;
 import com.alexander.cv_project.auth.service.RoleService;
 
 @Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -33,7 +34,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional
     public RoleResponse create(RoleRequest request) {
         try {
             return roleMapper.toResponse(roleRepository.save(roleMapper.toEntity(request)));
@@ -43,13 +43,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<RoleResponse> list() {
         return roleMapper.toResponseList(roleRepository.findAll());
     }
 
     @Override
-    @Transactional
     public void delete(Long roleId) {
         boolean hasRolePermissions = !rolePermissionRepository.findByRoleId(roleId).isEmpty();
         if (hasRolePermissions) {

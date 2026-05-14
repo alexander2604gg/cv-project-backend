@@ -23,6 +23,7 @@ import com.alexander.cv_project.auth.repository.RoleRepository;
 import com.alexander.cv_project.auth.service.RolePermissionService;
 
 @Service
+@Transactional
 public class RolePermissionServiceImpl implements RolePermissionService {
 
     private final RolePermissionRepository rolePermissionRepository;
@@ -42,35 +43,51 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     }
 
     @Override
-    @Transactional
     public List<RolePermissionResponse> assignPermissions(AssignRolePermissionsRequest request) {
         Long roleId = request.getRoleId();
-        List<Long> permissionIds = request.getPermissionIds();
 
-        if (!roleRepository.existsById(roleId)) {
-            throw new RoleNotFoundException(roleId);
-        }
+        // actuales en BD
+        List<RolePermissionEntity> actuales = rolePermissionRepository.findByRoleId(roleId);
 
-        permissionIds.stream()
-                .filter(permissionId -> !permissionRepository.existsById(permissionId))
-                .findFirst()
-                .ifPresent(permissionId -> {
-                    throw new PermissionNotFoundException(permissionId);
-                });
-
-        List<RolePermissionEntity> created = permissionIds.stream()
-                .distinct()
-                .map(permissionId -> buildEntity(roleId, permissionId))
-                .map(entity -> {
-                    try {
-                        return rolePermissionRepository.save(entity);
-                    } catch (DataIntegrityViolationException ex) {
-                        throw new RolePermissionAlreadyExistsException();
-                    }
-                })
+        List<Long> actualesIds = actuales.stream()
+                .map(rp -> rp.getPermission().getId())
                 .toList();
 
+        // nuevos (quitamos duplicados por si el front manda repetidos)
+        List<Long> nuevosIds = request.getPermissionIds()
+                .stream()
+                .distinct()
+                .toList();
+
+        // 🔥 calcular diferencias
+        List<Long> aEliminar = actualesIds.stream()
+                .filter(id -> !nuevosIds.contains(id))
+                .toList();
+
+        List<Long> aAgregar = nuevosIds.stream()
+                .filter(id -> !actualesIds.contains(id))
+                .toList();
+
+        // 🧹 eliminar solo lo necesario
+        if (!aEliminar.isEmpty()) {
+            rolePermissionRepository.deleteByRoleIdAndPermissionIds(roleId, aEliminar);
+        }
+
+        // ➕ agregar solo lo nuevo
+        List<RolePermissionEntity> nuevos = aAgregar.stream()
+                .map(permissionId -> buildEntity(roleId, permissionId))
+                .toList();
+
+        List<RolePermissionEntity> created = rolePermissionRepository.saveAll(nuevos);
+
+        // devolver estado final (opcional: podrías volver a consultar)
         return rolePermissionMapper.toResponseList(created);
+    }
+
+    @Override
+    public List<RolePermissionResponse> findByRoleId(Long roleId) {
+        List<RolePermissionEntity> rolePermission = rolePermissionRepository.findByRoleId(roleId);
+        return rolePermissionMapper.toResponseList(rolePermission);
     }
 
     private RolePermissionEntity buildEntity(Long roleId, Long permissionId) {
